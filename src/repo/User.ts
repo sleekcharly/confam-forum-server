@@ -6,7 +6,7 @@ import { Length } from "class-validator";
 // The Entity decorator tells TypeORM that the class that is about to be defined is an entity with the name Users.
 @Entity({ name: "Users" })
 export class User {
-  @PrimaryGeneratedColumn({ name: "id", type: "bigint" })
+  @PrimaryGeneratedColumn({ name: "Id", type: "bigint" })
   id: string;
 
   @Column("varchar", {
