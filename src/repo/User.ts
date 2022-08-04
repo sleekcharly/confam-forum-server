@@ -1,3 +1,4 @@
+import { ThreadPoint } from "./ThreadPoint";
 import { Thread } from "./Thread";
 // import typeorm decorators
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
@@ -42,4 +43,7 @@ export class User {
 
   @OneToMany(() => Thread, (thread) => thread.user)
   threads: Thread[];
+
+  @OneToMany(() => ThreadPoint, (threadPoint) => threadPoint.user)
+  threadPoints: ThreadPoint[];
 }

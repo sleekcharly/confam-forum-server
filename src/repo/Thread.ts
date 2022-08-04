@@ -1,3 +1,4 @@
+import { ThreadPoint } from "./ThreadPoint";
 import { ThreadItem } from "./ThreadItem";
 import {
   Entity,
@@ -41,4 +42,7 @@ export class Thread {
 
   @OneToMany(() => ThreadItem, (threadItems) => threadItems.thread)
   threadItems: ThreadItem[];
+
+  @OneToMany(() => ThreadPoint, (threadPoint) => threadPoint.thread)
+  threadPoints: ThreadPoint[];
 }
