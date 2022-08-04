@@ -5,10 +5,11 @@ import { Thread } from "./Thread";
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 // validator for length
 import { Length } from "class-validator";
+import { Auditable } from "./Auditable";
 
 // The Entity decorator tells TypeORM that the class that is about to be defined is an entity with the name Users.
 @Entity({ name: "Users" })
-export class User {
+export class User extends Auditable {
   @PrimaryGeneratedColumn({ name: "Id", type: "bigint" })
   id: string;
 

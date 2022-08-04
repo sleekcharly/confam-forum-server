@@ -10,9 +10,10 @@ import {
 import { Length } from "class-validator";
 import { User } from "./User";
 import { ThreadCategory } from "./ThreadCategory";
+import { Auditable } from "./Auditable";
 
 @Entity({ name: "Threads" })
-export class Thread {
+export class Thread extends Auditable {
   @PrimaryGeneratedColumn({ name: "Id", type: "bigint" })
   id: string;
 
