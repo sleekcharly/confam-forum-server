@@ -1,3 +1,4 @@
+import { ThreadItemPoint } from "./ThreadItemPoint";
 import { ThreadPoint } from "./ThreadPoint";
 import { Thread } from "./Thread";
 // import typeorm decorators
@@ -46,4 +47,7 @@ export class User {
 
   @OneToMany(() => ThreadPoint, (threadPoint) => threadPoint.user)
   threadPoints: ThreadPoint[];
+
+  @OneToMany(() => ThreadItemPoint, (threadItemPoint) => threadItemPoint.user)
+  threadItemPoints: ThreadItemPoint[];
 }

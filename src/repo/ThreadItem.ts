@@ -1,5 +1,12 @@
+import { ThreadItemPoint } from "./ThreadItemPoint";
 import { Thread } from "./Thread";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from "typeorm";
 import { Length } from "class-validator";
 import { User } from "./User";
 
@@ -23,4 +30,10 @@ export class ThreadItem {
 
   @ManyToOne(() => Thread, (thread) => thread.threadItems)
   thread: Thread;
+
+  @OneToMany(
+    () => ThreadItemPoint,
+    (threadItemPoint) => threadItemPoint.threadItem
+  )
+  threadItemPoints: ThreadItemPoint[];
 }
