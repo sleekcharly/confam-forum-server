@@ -1,5 +1,6 @@
+import { Thread } from "./Thread";
 // import typeorm decorators
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 // validator for length
 import { Length } from "class-validator";
 
@@ -38,4 +39,7 @@ export class User {
     nullable: false,
   })
   isDisabled: boolean;
+
+  @OneToMany(() => Thread, (thread) => thread.user)
+  threads: Thread[];
 }
