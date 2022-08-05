@@ -3,6 +3,8 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import Redis from "ioredis";
 import { createConnection } from "typeorm";
+import { register } from "./repo/UserRepo";
+import bodyParser from "body-parser";
 // Here, we import our dotenv package and set up default configurations. This is
 // what allows our .env file to be used in our project.
 require("dotenv").config();
@@ -14,8 +16,6 @@ declare module "express-session" {
     loadedCount: number;
   }
 }
-
-console.log(process.env.NODE_ENV);
 
 // wrap the code in an async function because createConnection is an async call and requires an await prefix.
 const main = async () => {
@@ -40,6 +40,9 @@ const main = async () => {
     client: redis,
   });
 
+  // set up bodyParser to read json parameters from posts
+  app.use(bodyParser.json());
+
   // setup session middleware
   app.use(
     session({
@@ -60,7 +63,29 @@ const main = async () => {
   // use the router middleware
   app.use(router);
 
-  // set up route
+  //set up route for registering a new user
+  router.post("/register", async (req, res, next) => {
+    try {
+      console.log("params", req.body);
+      const userResult = await register(
+        req.body.email,
+        req.body.userName,
+        req.body.password
+      );
+
+      if (userResult && userResult.user) {
+        res.send(`new user created, userId: ${userResult.user.id}`);
+      } else if (userResult && userResult.messages) {
+        res.send(userResult.messages[0]);
+      } else {
+        next();
+      }
+    } catch (ex) {
+      res.send(ex.message);
+    }
+  });
+
+  // set up route getting home route data
   router.get("/", (req, res, next) => {
     if (!req.session!.userid) {
       req.session!.userid = req.query.userid;
