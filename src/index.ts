@@ -5,7 +5,11 @@ import Redis from "ioredis";
 import { createConnection } from "typeorm";
 import { login, logout, register } from "./repo/UserRepo";
 import bodyParser from "body-parser";
-import { createThread } from "./repo/ThreadRepo";
+import {
+  createThread,
+  getThreadById,
+  getThreadsByCategoryId,
+} from "./repo/ThreadRepo";
 // Here, we import our dotenv package and set up default configurations. This is
 // what allows our .env file to be used in our project.
 require("dotenv").config();
@@ -150,6 +154,43 @@ const main = async () => {
         req.body.body
       );
       res.send(msg);
+    } catch (ex) {
+      console.log(ex);
+      res.send(ex.message);
+    }
+  });
+
+  // route for getting threads by a particular category
+  router.post("/threadsbycategory", async (req, res, next) => {
+    try {
+      const threadResult = await getThreadsByCategoryId(req.body.categoryId);
+
+      if (threadResult && threadResult.entities) {
+        let items = "";
+        threadResult.entities.forEach((th) => {
+          items += th.title + ", ";
+        });
+
+        res.send(items);
+      } else if (threadResult && threadResult.messages) {
+        res.send(threadResult.messages[0]);
+      }
+    } catch (ex) {
+      console.log(ex);
+      res.send(ex.message);
+    }
+  });
+
+  // route for getting a particular thread
+  router.post("/thread", async (req, res, next) => {
+    try {
+      const threadResult = await getThreadById(req.body.id);
+
+      if (threadResult && threadResult.entity) {
+        res.send(threadResult.entity.title);
+      } else if (threadResult && threadResult.messages) {
+        res.send(threadResult.messages[0]);
+      }
     } catch (ex) {
       console.log(ex);
       res.send(ex.message);
