@@ -5,6 +5,7 @@ import Redis from "ioredis";
 import { createConnection } from "typeorm";
 import { login, logout, register } from "./repo/UserRepo";
 import bodyParser from "body-parser";
+import { createThread } from "./repo/ThreadRepo";
 // Here, we import our dotenv package and set up default configurations. This is
 // what allows our .env file to be used in our project.
 require("dotenv").config();
@@ -135,6 +136,24 @@ const main = async () => {
     res.send(
       `userid: ${req.session!.userid}, loadedCount: ${req.session!.loadedCount}`
     );
+  });
+
+  // route for creating a thread
+  router.post("/createthread", async (req, res, next) => {
+    try {
+      console.log("userId", req.session);
+      console.log("body", req.body);
+      const msg = await createThread(
+        req.session!.userid,
+        req.body.categoryId,
+        req.body.title,
+        req.body.body
+      );
+      res.send(msg);
+    } catch (ex) {
+      console.log(ex);
+      res.send(ex.message);
+    }
   });
 
   // initialize the server
