@@ -2,7 +2,7 @@ import {
   isThreadBodyValid,
   isThreadTitleValid,
 } from "./../common/validators/ThreadValidators";
-import { QueryArrayResult } from "./QueryArrayResult";
+import { QueryArrayResult, QueryOneResult } from "./QueryArrayResult";
 import { Thread } from "./Thread";
 import { ThreadCategory } from "./ThreadCategory";
 import { User } from "./User";
@@ -63,5 +63,21 @@ export const createThread = async (
 
   return {
     messages: ["Thread created successfully."],
+  };
+};
+
+// repo for getting thread by its id
+export const getThreadById = async (
+  id: string
+): Promise<QueryOneResult<Thread>> => {
+  const thread = await Thread.findOneBy({ id });
+  if (!thread) {
+    return {
+      messages: ["Thread not found."],
+    };
+  }
+
+  return {
+    entity: thread,
   };
 };
