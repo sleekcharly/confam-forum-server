@@ -1,7 +1,7 @@
 import { IResolvers } from "apollo-server-express";
 import { QueryOneResult } from "../repo/QueryArrayResult";
 import { Thread } from "../repo/Thread";
-import { getThreadById } from "../repo/ThreadRepo";
+import { createThread, getThreadById } from "../repo/ThreadRepo";
 import { GqlContext } from "./GqlContext";
 
 interface EntityResult {
@@ -34,6 +34,34 @@ const resolvers: IResolvers = {
         }
         return {
           messages: thread.messages ? thread.messages[0] : ["test"],
+        };
+      } catch (ex) {
+        throw ex;
+      }
+    },
+  },
+
+  //   Create mutation for resolvers
+  Mutation: {
+    createThread: async (
+      obj: any,
+      args: { userId: string; categoryId: string; title: string; body: string },
+      ctx: GqlContext,
+      info: any
+    ): Promise<EntityResult> => {
+      let result: QueryOneResult<Thread>;
+      try {
+        result = await createThread(
+          args.userId,
+          args.categoryId,
+          args.title,
+          args.body
+        );
+
+        return {
+          messages: result.messages
+            ? result.messages
+            : ["An error has occured"],
         };
       } catch (ex) {
         throw ex;

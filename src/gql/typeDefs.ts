@@ -73,6 +73,16 @@ const typeDefs = gql`
   type Query {
     getThreadById(id: ID): ThreadResult
   }
+
+  # add mutation
+  type Mutation {
+    createThread(
+      userId: ID!
+      categoryId: ID!
+      title: String!
+      body: String!
+    ): EntityResult
+  }
 `;
 
 export default typeDefs;
