@@ -1,14 +1,17 @@
 import { IResolvers } from "apollo-server-express";
 import { QueryArrayResult, QueryOneResult } from "../repo/QueryArrayResult";
 import { Thread } from "../repo/Thread";
+import { updateThreadItemPoint } from "../repo/ThreadItemPointRepo";
 import { updateThreadPoint } from "../repo/ThreadPointRepo";
 import {
   createThread,
   getThreadById,
   getThreadsByCategoryId,
 } from "../repo/ThreadRepo";
+import { register, UserResult } from "../repo/UserRepo";
 import { GqlContext } from "./GqlContext";
 
+const STANDARD_ERROR = "An error has occurred";
 interface EntityResult {
   messages: Array<string> | string;
 }
@@ -134,6 +137,48 @@ const resolvers: IResolvers = {
         );
 
         return result;
+      } catch (ex) {
+        throw ex;
+      }
+    },
+
+    // update thread item point mutation
+    updateThreadItemPoint: async (
+      obj: any,
+      args: { threadItemId: string; increment: boolean },
+      ctx: GqlContext,
+      info: any
+    ): Promise<string> => {
+      let result = "";
+      try {
+        if (!ctx.req.session || !ctx.req.session?.userid) {
+          return "You must be logged in to set likes.";
+        }
+        result = await updateThreadItemPoint(
+          ctx.req.session!.userid,
+          args.threadItemId,
+          args.increment
+        );
+        return result;
+      } catch (ex) {
+        throw ex;
+      }
+    },
+
+    // register call mutation
+    register: async (
+      obj: any,
+      args: { email: string; userName: string; password: string },
+      ctx: GqlContext,
+      info: any
+    ): Promise<string> => {
+      let user: UserResult;
+      try {
+        user = await register(args.email, args.userName, args.password);
+        if (user && user.user) {
+          return "Registration successful.";
+        }
+        return user && user.messages ? user.messages[0] : STANDARD_ERROR;
       } catch (ex) {
         throw ex;
       }

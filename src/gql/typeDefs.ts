@@ -96,7 +96,12 @@ const typeDefs = gql`
       body: String!
     ): EntityResult
 
-    updateThreadPoint(userId: ID!, threadId: ID!, increment: Boolean!): String!
+    updateThreadPoint(threadId: ID!, increment: Boolean!): String!
+
+    updateThreadItemPoint(threadItemId: ID!, increment: Boolean!): String!
+
+    # register call
+    register(email: String!, userName: String!, password: String!): String!
   }
 
   # create a type for returning a threads array

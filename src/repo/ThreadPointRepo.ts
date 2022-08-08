@@ -17,7 +17,7 @@ export const updateThreadPoint = async (
   });
 
   if (thread!.user!.id === userId) {
-    message = "Error: users cannot ncrement their own thread";
+    message = "Error: users cannot increment their own thread";
     return message;
   }
 
