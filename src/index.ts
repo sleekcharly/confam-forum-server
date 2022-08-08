@@ -10,6 +10,9 @@ import {
   getThreadById,
   getThreadsByCategoryId,
 } from "./repo/ThreadRepo";
+import { ApolloServer, makeExecutableSchema } from "apollo-server-express";
+import typeDefs from "./gql/typeDefs";
+import resolvers from "./gql/resolvers";
 // Here, we import our dotenv package and set up default configurations. This is
 // what allows our .env file to be used in our project.
 require("dotenv").config();
@@ -196,6 +199,13 @@ const main = async () => {
       res.send(ex.message);
     }
   });
+
+  const schema = makeExecutableSchema({ typeDefs, resolvers });
+  const apolloServer = new ApolloServer({
+    schema,
+    context: ({ req, res }: any) => ({ req, res }),
+  });
+  apolloServer.applyMiddleware({ app });
 
   // initialize the server
   app.listen({ port: process.env.SERVER_PORT }, () => {
