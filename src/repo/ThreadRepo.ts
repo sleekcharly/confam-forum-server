@@ -29,7 +29,7 @@ export const createThread = async (
   }
 
   // users must be logged in to post
-  const user = await User.findOneBy({
+  const user = await User.findOne({
     id: userId,
   });
 
@@ -39,7 +39,7 @@ export const createThread = async (
     };
   }
 
-  const category = await ThreadCategory.findOneBy({
+  const category = await ThreadCategory.findOne({
     id: categoryId,
   });
 
@@ -70,7 +70,7 @@ export const createThread = async (
 export const getThreadById = async (
   id: string
 ): Promise<QueryOneResult<Thread>> => {
-  const thread = await Thread.findOneBy({ id });
+  const thread = await Thread.findOne({ id });
   if (!thread) {
     return {
       messages: ["Thread not found."],

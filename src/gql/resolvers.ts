@@ -1,6 +1,7 @@
 import { IResolvers } from "apollo-server-express";
 import { QueryArrayResult, QueryOneResult } from "../repo/QueryArrayResult";
 import { Thread } from "../repo/Thread";
+import { updateThreadPoint } from "../repo/ThreadPointRepo";
 import {
   createThread,
   getThreadById,
@@ -10,6 +11,13 @@ import { GqlContext } from "./GqlContext";
 
 interface EntityResult {
   messages: Array<string> | string;
+}
+
+// implement declaration merging for user id and loadedCount
+declare module "express-session" {
+  export interface SessionData {
+    userid: any;
+  }
 }
 
 const resolvers: IResolvers = {
@@ -102,6 +110,30 @@ const resolvers: IResolvers = {
             ? result.messages
             : ["An error has occured"],
         };
+      } catch (ex) {
+        throw ex;
+      }
+    },
+
+    updateThreadPoint: async (
+      obj: any,
+      args: { threadId: string; increment: boolean },
+      ctx: GqlContext,
+      info: any
+    ): Promise<string> => {
+      let result;
+      try {
+        console.log(ctx.req.session);
+        if (!ctx.req.session || !ctx.req.session?.userid) {
+          return "You must be logged in to set likes.";
+        }
+        result = await updateThreadPoint(
+          ctx.req.session!.userid,
+          args.threadId,
+          args.increment
+        );
+
+        return result;
       } catch (ex) {
         throw ex;
       }

@@ -56,12 +56,11 @@ const main = async () => {
     session({
       store: redisStore,
       name: process.env.COOKIE_NAME,
-      sameSite: "strict",
+      sameSite: "Strict",
       secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       cookie: {
-        path: "/",
         httpOnly: true,
         secure: false,
         maxAge: 1000 * 60 * 60 * 24,
@@ -79,6 +78,7 @@ const main = async () => {
 
       if (userResult && userResult.user) {
         req.session!.userid = userResult.user?.id;
+        console.log(req.session);
         res.send(`user logged in, userId: ${req.session!.userid}`);
       } else if (userResult && userResult.messages) {
         res.send(userResult.messages[0]);
@@ -205,7 +205,7 @@ const main = async () => {
     schema,
     context: ({ req, res }: any) => ({ req, res }),
   });
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, cors: false });
 
   // initialize the server
   app.listen({ port: process.env.SERVER_PORT }, () => {
