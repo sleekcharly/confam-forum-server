@@ -1,7 +1,11 @@
 import { IResolvers } from "apollo-server-express";
-import { QueryOneResult } from "../repo/QueryArrayResult";
+import { QueryArrayResult, QueryOneResult } from "../repo/QueryArrayResult";
 import { Thread } from "../repo/Thread";
-import { createThread, getThreadById } from "../repo/ThreadRepo";
+import {
+  createThread,
+  getThreadById,
+  getThreadsByCategoryId,
+} from "../repo/ThreadRepo";
 import { GqlContext } from "./GqlContext";
 
 interface EntityResult {
@@ -16,6 +20,15 @@ const resolvers: IResolvers = {
       }
 
       return "Thread";
+    },
+  },
+
+  ThreadArrayResult: {
+    __resolveType(obj: any, context: GqlContext, info: any) {
+      if (obj.messages) {
+        return "EntityResult";
+      }
+      return "ThreadArray";
     },
   },
 
@@ -34,6 +47,32 @@ const resolvers: IResolvers = {
         }
         return {
           messages: thread.messages ? thread.messages[0] : ["test"],
+        };
+      } catch (ex) {
+        throw ex;
+      }
+    },
+
+    // query for getting threads by category
+    getThreadsByCategoryId: async (
+      obj: any,
+      args: { categoryId: string },
+      ctx: GqlContext,
+      info: any
+    ): Promise<{ threads: Array<Thread> } | EntityResult> => {
+      let threads: QueryArrayResult<Thread>;
+      try {
+        threads = await getThreadsByCategoryId(args.categoryId);
+        if (threads.entities) {
+          return {
+            threads: threads.entities,
+          };
+        }
+
+        return {
+          messages: threads.messages
+            ? threads.messages
+            : ["An error has occured"],
         };
       } catch (ex) {
         throw ex;

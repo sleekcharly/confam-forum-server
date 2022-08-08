@@ -69,9 +69,22 @@ const typeDefs = gql`
     lastModifiedOn: Date!
   }
 
+  # ThreadPoint type
+  type ThreadPoint {
+    id: ID!
+    isDecrement: Boolean!
+    user: User!
+    thread: Thread!
+    createdBy: String!
+    createdOn: Date!
+    lastModifiedBy: String!
+    lastModifiedOn: Date!
+  }
+
   # query with getThreadById function
   type Query {
     getThreadById(id: ID): ThreadResult
+    getThreadsByCategoryId(categoryId: ID!): ThreadArrayResult!
   }
 
   # add mutation
@@ -83,6 +96,14 @@ const typeDefs = gql`
       body: String!
     ): EntityResult
   }
+
+  # create a type for returning a threads array
+  type ThreadArray {
+    threads: [Thread!]
+  }
+
+  # create a union type to accomodate return of arrays or an entity
+  union ThreadArrayResult = ThreadArray | EntityResult
 `;
 
 export default typeDefs;
