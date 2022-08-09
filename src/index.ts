@@ -13,6 +13,7 @@ import {
 import { ApolloServer, makeExecutableSchema } from "apollo-server-express";
 import typeDefs from "./gql/typeDefs";
 import resolvers from "./gql/resolvers";
+import cors from "cors";
 // Here, we import our dotenv package and set up default configurations. This is
 // what allows our .env file to be used in our project.
 require("dotenv").config();
@@ -29,6 +30,14 @@ declare module "express-session" {
 const main = async () => {
   // instantiate our app with express
   const app = express();
+
+  // set up cors
+  app.use(
+    cors({
+      credentials: true,
+      origin: process.env.CLIENT_URL,
+    })
+  );
 
   // initialize router object
   const router = express.Router();

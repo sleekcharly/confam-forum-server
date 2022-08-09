@@ -24,6 +24,9 @@ const typeDefs = gql`
     lastModifiedOn: Date!
   }
 
+  #   union type for Userresult
+  union UserResult = User | EntityResult
+
   # Thread type
   type Thread {
     id: ID!
@@ -42,6 +45,10 @@ const typeDefs = gql`
 
   # union type
   union ThreadResult = Thread | EntityResult
+  # create a type for returning a threads array
+  type ThreadArray {
+    threads: [Thread!]
+  }
 
   # Thread item type
   type ThreadItem {
@@ -56,6 +63,13 @@ const typeDefs = gql`
     lastModifiedBy: String!
     lastModifiedOn: Date!
   }
+
+  # union type
+  union ThreadItemResult = ThreadItem | EntityResult
+  type ThreadItemArray {
+    threadItems: [ThreadItem!]
+  }
+  union ThreadItemArrayResult = ThreadItemArray | EntityResult
 
   # ThreadCategory type
   type ThreadCategory {
@@ -81,10 +95,36 @@ const typeDefs = gql`
     lastModifiedOn: Date!
   }
 
+  # ThreadItemPoint type
+  type ThreadItemPoint {
+    id: ID!
+    isDecrement: Boolean!
+    user: User!
+    threadItem: ThreadItem!
+    createdBy: String!
+    createdOn: Date!
+    lastModifiedBy: String!
+    lastModifiedOn: Date!
+  }
+
+  # CategoryThread type
+  type CategoryThread {
+    threadId: ID!
+    categoryId: ID!
+    categoryName: String!
+    title: String!
+    titleCreatedOn: Date!
+  }
+
   # query with getThreadById function
   type Query {
     getThreadById(id: ID): ThreadResult
     getThreadsByCategoryId(categoryId: ID!): ThreadArrayResult!
+    getThreadsLatest: ThreadArrayResult!
+    getThreadItemByThreadId(threadId: ID!): ThreadItemArrayResult!
+    getAllCategories: [ThreadCategory!]
+    me: UserResult!
+    getTopCategoryThread: [CategoryThread!]
   }
 
   # add mutation
@@ -96,17 +136,22 @@ const typeDefs = gql`
       body: String!
     ): EntityResult
 
+    createThreadItem(userId: ID!, threadId: ID!, body: String): EntityResult
+
     updateThreadPoint(threadId: ID!, increment: Boolean!): String!
 
     updateThreadItemPoint(threadItemId: ID!, increment: Boolean!): String!
 
     # register call
     register(email: String!, userName: String!, password: String!): String!
-  }
 
-  # create a type for returning a threads array
-  type ThreadArray {
-    threads: [Thread!]
+    # login call
+    login(userName: String!, password: String!): String!
+
+    # logout call
+    logout(userName: String!): String!
+
+    changePassword(newPassword: String!): String!
   }
 
   # create a union type to accomodate return of arrays or an entity
