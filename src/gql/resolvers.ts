@@ -123,7 +123,7 @@ const resolvers: IResolvers = {
     },
 
     // query for getting the latest threads
-    getThreadLatest: async (
+    getThreadsLatest: async (
       obj: any,
       args: null,
       ctx: GqlContext,
