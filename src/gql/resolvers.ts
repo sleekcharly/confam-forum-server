@@ -277,9 +277,8 @@ const resolvers: IResolvers = {
       ctx: GqlContext,
       info: any
     ): Promise<string> => {
-      let result;
+      let result = "";
       try {
-        console.log(ctx.req.session);
         if (!ctx.req.session || !ctx.req.session?.userid) {
           return "You must be logged in to set likes.";
         }

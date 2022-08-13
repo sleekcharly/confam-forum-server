@@ -9,6 +9,9 @@ export const updateThreadPoint = async (
   increment: boolean
 ): Promise<string> => {
   // todo: first check if user is authenticated
+  if (!userId || userId === "0") {
+    return "User is not authenticated";
+  }
 
   let message = "Failed to increment thread point";
   const thread = await Thread.findOne({
@@ -39,14 +42,14 @@ export const updateThreadPoint = async (
           await ThreadPoint.remove(existingPoint);
           thread!.points = Number(thread!.points) + 1;
           thread!.lastModifiedOn = new Date();
-          thread!.save();
+          await thread!.save();
         }
       } else {
         if (!existingPoint.isDecrement) {
           await ThreadPoint.remove(existingPoint);
           thread!.points = Number(thread!.points) - 1;
           thread!.lastModifiedOn = new Date();
-          thread!.save();
+          await thread!.save();
         }
       }
     } else {
@@ -62,7 +65,7 @@ export const updateThreadPoint = async (
         thread!.points = Number(thread!.points) - 1;
       }
       thread!.lastModifiedOn = new Date();
-      thread!.save();
+      await thread!.save();
     }
 
     message = `Successfully ${
