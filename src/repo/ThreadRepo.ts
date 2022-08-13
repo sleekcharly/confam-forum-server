@@ -70,7 +70,12 @@ export const createThread = async (
 export const getThreadById = async (
   id: string
 ): Promise<QueryOneResult<Thread>> => {
-  const thread = await Thread.findOne({ id });
+  const thread = await Thread.findOne({
+    where: {
+      id,
+    },
+    relations: ["user", "threadItems", "threadItems.user", "category"],
+  });
   if (!thread) {
     return {
       messages: ["Thread not found."],
@@ -90,6 +95,7 @@ export const getThreadsByCategoryId = async (
     .where(`thread."categoryId" = :categoryId`, { categoryId })
     .leftJoinAndSelect("thread.category", "category")
     .leftJoinAndSelect("thread.threadItems", "threadItems")
+    .leftJoinAndSelect("thread.user", "user")
     .orderBy("thread.createdOn", "DESC")
     .getMany();
 

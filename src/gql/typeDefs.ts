@@ -18,6 +18,7 @@ const typeDefs = gql`
     confirmed: Boolean!
     isDisabled: Boolean!
     threads: [Thread!]
+    threadItems: [ThreadItem!]
     createdBy: String!
     createdOn: Date!
     lastModifiedBy: String!
@@ -31,6 +32,7 @@ const typeDefs = gql`
   type Thread {
     id: ID!
     views: Int!
+    points: Int!
     isDisabled: Boolean!
     title: String!
     body: String!
@@ -54,6 +56,7 @@ const typeDefs = gql`
   type ThreadItem {
     id: ID!
     views: Int!
+    points: Int!
     isDisabled: Boolean!
     body: String!
     user: User!
@@ -151,6 +154,7 @@ const typeDefs = gql`
     # logout call
     logout(userName: String!): String!
 
+    #change password mutation
     changePassword(newPassword: String!): String!
   }
 

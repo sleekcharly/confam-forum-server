@@ -13,7 +13,14 @@ import {
   getThreadsLatest,
 } from "../repo/ThreadRepo";
 import { User } from "../repo/User";
-import { login, logout, me, register, UserResult } from "../repo/UserRepo";
+import {
+  changePassword,
+  login,
+  logout,
+  me,
+  register,
+  UserResult,
+} from "../repo/UserRepo";
 import { GqlContext } from "./GqlContext";
 
 const STANDARD_ERROR = "An error has occurred";
@@ -352,6 +359,28 @@ const resolvers: IResolvers = {
           }
           console.log("session destroyed", ctx.req.session?.userid);
         });
+        return result;
+      } catch (ex) {
+        throw ex;
+      }
+    },
+
+    // change password call function
+    changePassword: async (
+      obj: any,
+      args: { newPassword: string },
+      ctx: GqlContext,
+      info: any
+    ): Promise<string> => {
+      try {
+        if (!ctx.req.session || !ctx.req.session!.userid) {
+          return "You must be logged in before you ca change your password.";
+        }
+        let result = await changePassword(
+          ctx.req.session!.userid,
+          args.newPassword
+        );
+
         return result;
       } catch (ex) {
         throw ex;

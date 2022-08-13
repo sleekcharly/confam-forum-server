@@ -6,6 +6,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 // validator for length
 import { Length } from "class-validator";
 import { Auditable } from "./Auditable";
+import { ThreadItem } from "./ThreadItem";
 
 // The Entity decorator tells TypeORM that the class that is about to be defined is an entity with the name Users.
 @Entity({ name: "Users" })
@@ -51,4 +52,7 @@ export class User extends Auditable {
 
   @OneToMany(() => ThreadItemPoint, (threadItemPoint) => threadItemPoint.user)
   threadItemPoints: ThreadItemPoint[];
+
+  @OneToMany(() => ThreadItem, (threadItem) => threadItem.user)
+  threadItems: ThreadItem[];
 }
