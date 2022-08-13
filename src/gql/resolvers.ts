@@ -1,3 +1,5 @@
+import { getTopCategoryThread } from "../repo/CategoryThreadRepo";
+import CategoryThread from "../repo/CategoryThread";
 import { IResolvers } from "apollo-server-express";
 import { QueryArrayResult, QueryOneResult } from "../repo/QueryArrayResult";
 import { Thread } from "../repo/Thread";
@@ -222,6 +224,21 @@ const resolvers: IResolvers = {
           messages: user.messages ? user.messages : [STANDARD_ERROR],
         };
       } catch (ex) {
+        throw ex;
+      }
+    },
+
+    // query for getting top categories
+    getTopCategoryThread: async (
+      obj: any,
+      args: null,
+      ctx: GqlContext,
+      info: any
+    ): Promise<Array<CategoryThread>> => {
+      try {
+        return await getTopCategoryThread();
+      } catch (ex) {
+        console.log(ex.message);
         throw ex;
       }
     },
