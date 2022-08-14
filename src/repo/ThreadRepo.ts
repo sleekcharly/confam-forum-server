@@ -74,7 +74,13 @@ export const getThreadById = async (
     where: {
       id,
     },
-    relations: ["user", "threadItems", "threadItems.user", "category"],
+    relations: [
+      "user",
+      "threadItems",
+      "threadItems.user",
+      "threadItems.thread",
+      "category",
+    ],
   });
   if (!thread) {
     return {
