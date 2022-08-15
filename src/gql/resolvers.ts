@@ -24,6 +24,8 @@ import {
   UserResult,
 } from "../repo/UserRepo";
 import { GqlContext } from "./GqlContext";
+import { createThreadItem } from "../repo/ThreadItemRepo";
+import { ThreadItem } from "../repo/ThreadItem";
 
 const STANDARD_ERROR = "An error has occurred";
 interface EntityResult {
@@ -267,6 +269,24 @@ const resolvers: IResolvers = {
             : ["An error has occured"],
         };
       } catch (ex) {
+        throw ex;
+      }
+    },
+
+    createThreadItem: async (
+      obj: any,
+      args: { userId: string; threadId: string; body: string },
+      ctx: GqlContext,
+      info: any
+    ): Promise<EntityResult> => {
+      let result: QueryOneResult<ThreadItem>;
+      try {
+        result = await createThreadItem(args.userId, args.threadId, args.body);
+        return {
+          messages: result.messages ? result.messages : [STANDARD_ERROR],
+        };
+      } catch (ex) {
+        console.log(ex);
         throw ex;
       }
     },

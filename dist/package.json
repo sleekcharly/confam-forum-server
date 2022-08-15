@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node-dev --respawn src/index.ts",
-    "build": "del-cli dist && cpy 'dev-config/*' dist && cpy 'dev-config/*.env' dist && tsc"
+    "start": "ts-node-dev --respawn src/index.ts"
   },
   "keywords": [],
   "author": "Charles Ukasoanya",
